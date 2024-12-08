@@ -4,18 +4,15 @@ import os
 import socket
 import json
 import send
-import get_settings
 
 class ChromeDriver:
     """
     chrome driver相關函式
     """
-    def __init__(self) -> None:
-        self.port = get_settings.port
-        self.driver_path = get_settings.driver_path
-        self.profile_save_path = get_settings.profile_save_path
-        self.enable_headless = get_settings.enable_headless
-        self.account = get_settings.account
+    def __init__(self, port:str|int, driver_path:str, profile_save_path:str) -> None:
+        self.port = port
+        self.driver_path = driver_path
+        self.profile_save_path = profile_save_path
         self.driver = None
 
 
@@ -36,16 +33,22 @@ class ChromeDriver:
             return True # port已開啟
 
     
-    def launch(self) -> None:
+    def launch(self, account:str | None = None, enable_headless:bool = False) -> None:
         """
         啟動Chrome瀏覽器
         """
+        if self.check_port():
+            print(f"{self.port}已啟動")
+            return
+        
         try:
+            print(f"正在啟動chrome driver, port:{self.port}")
             path = '"chrome"'
-            userdata = f'"{self.profile_save_path}\{self.account}\profile\chromeprofile"'
-            diskcache = f'"{self.profile_save_path}\{self.account}\profile\chromecache"'
+            has_account = "" if account is None else rf"\{account}"
+            userdata = rf'"{self.profile_save_path}{has_account}\profile\chromeprofile"'
+            diskcache = rf'"{self.profile_save_path}{has_account}\profile\chromecache"'
 
-            if self.enable_headless:
+            if enable_headless:
                 path += ' --headless=new'
 
             path += f' --remote-debugging-port={self.port} --user-data-dir={userdata} --disk-cache-dir={diskcache}'
@@ -148,7 +151,6 @@ class ChromeDriver:
             cookie_string = "; ".join([str(x)+"="+str(y) for x,y in cookies_dict.items()])
             # print(cookie_string)
 
-
             # 取得UserAgent
             userAgent = str(self.driver.execute_script("return navigator.userAgent;"))
 
@@ -161,16 +163,12 @@ class ChromeDriver:
 
 if __name__ == '__main__':
     port = 9000
-    driver_path = r"..\driver\chromedriver.exe"
-    profile_save_path = r"D:\Users\User\Desktop\test_profile"
-    enable_headless = False
+    driver_path = "../../driver/chromedriver.exe"
+    profile_save_path = r"D:\Users\User\Desktop"
 
-    chrome_driver = ChromeDriver(port=port, driver_path=driver_path, profile_save_path=profile_save_path, enable_headless=enable_headless)
-    while True:
-        if not chrome_driver.check_port():
-            chrome_driver.launch()
-        else:
-            break
+    chrome_driver = ChromeDriver(port=port, driver_path=driver_path, profile_save_path=profile_save_path)
+    chrome_driver.launch(account="test_profile")
 
     driver = chrome_driver.monitor()
+    driver.get("https://www.google.com/")
     

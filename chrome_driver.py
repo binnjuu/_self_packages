@@ -9,10 +9,11 @@ class ChromeDriver:
     """
     chrome driver相關函式
     """
-    def __init__(self, port:str|int, driver_path:str, profile_save_path:str) -> None:
+    def __init__(self, port:str|int, driver_path:str, profile_save_path:str, enable_headless:bool=False) -> None:
         self.port = port
         self.driver_path = driver_path
         self.profile_save_path = profile_save_path
+        self.enable_headless = enable_headless
         self.driver = None
 
 
@@ -33,7 +34,7 @@ class ChromeDriver:
             return True # port已開啟
 
     
-    def launch(self, account:str | None = None, enable_headless:bool = False) -> None:
+    def launch(self, account:str | None = None) -> None:
         """
         啟動Chrome瀏覽器
         """
@@ -48,7 +49,7 @@ class ChromeDriver:
             userdata = rf'"{self.profile_save_path}{has_account}\profile\chromeprofile"'
             diskcache = rf'"{self.profile_save_path}{has_account}\profile\chromecache"'
 
-            if enable_headless:
+            if self.enable_headless:
                 path += ' --headless=new'
 
             path += f' --remote-debugging-port={self.port} --user-data-dir={userdata} --disk-cache-dir={diskcache}'

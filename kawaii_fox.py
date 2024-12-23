@@ -5,11 +5,11 @@ from discord.ext import commands
 from discord.ext.commands import Bot
 
 # 開始執行
-def start(api_key:str, channel_id:str, message:str, at_user_id:str|None = None):
+def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
   """
   向discord指定頻道發送一則訊息,
   api_key: 機器人api key,
-  channel_id: 指定頻道id,
+  channel_id: 指定頻道id，需要是整數型態,
   message: 要送出的訊息,
 
   [可選]at_user_id: 標記一位使用者id

@@ -1,5 +1,5 @@
-import time
 import sys
+import datetime
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
@@ -28,15 +28,14 @@ def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
     game = discord.Game("I'm not a Cat!")
     await client.change_presence(status=discord.Status.idle, activity=game)
     
+    timestamp = datetime.datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
     #發送訊息到特定頻道
     channel = client.get_channel(channel_id)
-    localtime = time.localtime()
-    result = time.strftime("%Y-%m-%d %I:%M:%S", localtime)
-
+    output_text = f"`[{timestamp}]`"
     if at_user_id is not None:
-      output_text = f"`[{result}]`\n>> <@>{at_user_id} {message}"
+      output_text += f"\n>> <@{at_user_id}> {message}"
     else:
-      output_text = f"`[{result}]`\n>> {message}\n---"
+      output_text += f"\n>> {message}\n---"
 
     await channel.send(output_text)
 

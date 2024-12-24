@@ -39,7 +39,7 @@ def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
 
     await channel.send(output_text)
 
-    #關閉程式
-    sys.exit(0)
+    #關閉機器人
+    await client.close()
 
   client.run(api_key)

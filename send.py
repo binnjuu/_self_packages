@@ -60,7 +60,7 @@ def pause(text="測試中...", e="") -> None:
         message = f"{text}\n{errMsg}\n"
         error_message(message)
 
-    os.system("pause")
+    input("輸入任意鍵關閉程式...")
     sys.exit(0)
 
 

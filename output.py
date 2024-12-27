@@ -34,7 +34,7 @@ def log(text:str):
   date = datetime.datetime.now().strftime(r"%Y-%m-%d")
   timestamp = datetime.datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
   log_folder = check_folder_path(date_str=date)
-  log_output_path = f"{log_folder}/{date}"
+  log_output_path = f"{log_folder}/{date}.log"
 
   # 整理輸出內容
   log_text = f"[{timestamp}]\n{text}\n\n---"

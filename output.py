@@ -42,6 +42,8 @@ def log(text:str):
   f = open(log_output_path, encoding="utf8", mode="w+")
   f.write(log_text)
   f.close()
+
+  print(f"已輸出log: {log_output_path}")
   
 
   

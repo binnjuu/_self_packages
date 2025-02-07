@@ -1,4 +1,5 @@
 import sys
+from io import StringIO
 import datetime
 import discord
 from discord.ext import commands
@@ -27,17 +28,23 @@ def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
         #遊玩狀態更改
         game = discord.Game("I'm not a Cat!")
         await client.change_presence(status=discord.Status.idle, activity=game)
-        
-        timestamp = datetime.datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
+
+        file_date = datetime.datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
         #發送訊息到特定頻道
         channel = client.get_channel(channel_id)
-        output_text = f"`[{timestamp}]`"
-        if at_user_id is not None:
-            output_text += f"\n>> <@{at_user_id}> {message}"
+        if len(message) > 2000:
+            buffer = StringIO(message)
+            file_date = datetime.datetime.now().strftime(r"%Y-%m-%d")
+            f = discord.File(buffer, filename=f"{file_date}.txt")
+            await channel.send(file=f)
         else:
-            output_text += f"\n>> {message}\n---"
+            output_text = f"`[{file_date}]`"
+            if at_user_id is not None:
+                output_text += f"\n>> <@{at_user_id}> {message}"
+            else:
+                output_text += f"\n>> {message}\n---"
 
-        await channel.send(output_text)
+            await channel.send(output_text)
 
         #關閉機器人
         await client.close()

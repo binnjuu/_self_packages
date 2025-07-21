@@ -4,14 +4,15 @@ import datetime
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
+import time
 
 # 開始執行
-def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
+def start(api_key:str, channel_id:int, message, at_user_id:str|None = None):
     """
     向discord指定頻道發送一則訊息,
     api_key: 機器人api key,
     channel_id: 指定頻道id，需要是整數型態,
-    message: 要送出的訊息,
+    message: 要送出的訊息(可以是list，會依序送出),
 
     [可選]at_user_id: 標記一位使用者id
     """
@@ -32,11 +33,23 @@ def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
         file_date = datetime.datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
         #發送訊息到特定頻道
         channel = client.get_channel(channel_id)
-        if len(message) > 2000:
-            buffer = StringIO(message)
-            file_date = datetime.datetime.now().strftime(r"%Y-%m-%d")
-            f = discord.File(buffer, filename=f"{file_date}.txt")
-            await channel.send(file=f)
+        # 如果訊息為list格式，則每隔x秒送出一個
+        if type(message) is list:
+            for msg in message:
+                output_text = f"`[{file_date}]`"
+                if at_user_id is not None:
+                    output_text += f"\n>> <@{at_user_id}> {msg}"
+                else:
+                    output_text += f"\n{msg}\n---"
+
+                await channel.send(output_text)
+                time.sleep(3)
+
+        elif len(message) > 2000:
+                buffer = StringIO(message)
+                file_date = datetime.datetime.now().strftime(r"%Y-%m-%d")
+                f = discord.File(buffer, filename=f"{file_date}.txt")
+                await channel.send(file=f)
         else:
             output_text = f"`[{file_date}]`"
             if at_user_id is not None:
@@ -45,7 +58,7 @@ def start(api_key:str, channel_id:int, message:str, at_user_id:str|None = None):
                 output_text += f"\n>> {message}\n---"
 
             await channel.send(output_text)
-
+  
         #關閉機器人
         await client.close()
 

@@ -4,14 +4,14 @@ import os
 import socket
 import json
 from . import send
+from webdriver_manager.chrome import ChromeDriverManager
 
 class ChromeDriver:
     """
     chrome driver相關函式
     """
-    def __init__(self, port:str|int, driver_path:str, profile_save_path:str, enable_headless:bool=False) -> None:
+    def __init__(self, port:str|int, profile_save_path:str, enable_headless:bool=False) -> None:
         self.port = port
-        self.driver_path = driver_path
         self.profile_save_path = profile_save_path
         self.enable_headless = enable_headless
         self.driver = None
@@ -71,7 +71,7 @@ class ChromeDriver:
                 print(f"監聽失敗，無法連線到{self.port}...")
                 return None
 
-            service = Service(executable_path = self.driver_path) #chromedriver路徑
+            service = Service(ChromeDriverManager().install()) #chromedriver路徑
             
             # 參數設定
             options = webdriver.ChromeOptions()
@@ -164,12 +164,12 @@ class ChromeDriver:
 
 if __name__ == '__main__':
     port = 9000
-    driver_path = "../../driver/chromedriver.exe"
     profile_save_path = r"D:\Users\User\Desktop"
 
-    chrome_driver = ChromeDriver(port=port, driver_path=driver_path, profile_save_path=profile_save_path)
+    chrome_driver = ChromeDriver(port=port, profile_save_path=profile_save_path)
     chrome_driver.launch(account="test_profile")
 
     driver = chrome_driver.monitor()
-    driver.get("https://www.google.com/")
+    driver.get("https://www.youtube.com/")
+    input()
     

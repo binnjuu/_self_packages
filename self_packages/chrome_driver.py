@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service
 import os
 import socket
 import json
-import send
+from . import send
 
 class ChromeDriver:
     """

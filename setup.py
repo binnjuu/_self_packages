@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="_self_packages",
+    name="self-packages",
     version="0.1.0",
     description="自用套件包",
     author="binnjuu",

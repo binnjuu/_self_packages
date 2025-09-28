@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="self-packages",
-    version="0.1.1",
+    version="0.1.2",
     description="自用套件包",
     author="binnjuu",
     author_email="binnjuu205@gmail.com",

@@ -52,7 +52,7 @@ class ChromeDriver:
             if self.enable_headless:
                 path += ' --headless=new'
 
-            path += f' --remote-debugging-port={self.port} --user-data-dir={userdata} --disk-cache-dir={diskcache}'
+            path += f' --no-first-run --disable-fre --remote-debugging-port={self.port} --user-data-dir={userdata} --disk-cache-dir={diskcache}'
 
             os.system(f'start "chrome" {path}')
 
